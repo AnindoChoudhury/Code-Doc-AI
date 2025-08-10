@@ -1,6 +1,6 @@
 import os
 import openai
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -11,42 +11,49 @@ app = Flask(__name__)
 # Set the OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/generate-docs', methods=['POST'])
 def generate_docs():
     try:
         # Get the C++ code from the incoming request
         code = request.json['code']
-        
-        # This is our Prompt Engineering!
-        # We create a detailed instruction for the AI.
-        prompt = f"""
-        You are an expert C++ programmer and technical writer.
-        Your task is to generate clear and concise documentation for the following C++ function.
+       
+        mock_documentation = """
+            /@brief Calculates the sum of two integers.**This function takes two integers as input and returns their sum.* @param a The first integer. *@param b The second integer.*@return The sum of a and b.
+            */
+            """
 
-        The documentation must be in Doxygen format. It should include:
-        1. A brief, one-sentence summary of the function's purpose.
-        2. A detailed explanation of what the function does.
-        3. A list of all parameters (@param), their types, and what they represent.
-        4. A description of the return value (@return).
+        # prompt = f"""
+        # You are an expert C++ programmer and technical writer.
+        # Your task is to generate clear and concise documentation for the following C++ function.
 
-        Here is the C++ function:
-        ```cpp
-        {code}
-        ```
-        """
+        # The documentation must be in Doxygen format. It should include:
+        # 1. A brief, one-sentence summary of the function's purpose.
+        # 2. A detailed explanation of what the function does.
+        # 3. A list of all parameters (@param), their types, and what they represent.
+        # 4. A description of the return value (@return).
+
+        # Here is the C++ function:
+        # ```cpp
+        # {code}
+        # ```
+        # """
 
         # Call the OpenAI API
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful C++ documentation assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.5
-        )
+        # response = openai.chat.completions.create(
+        #     model="gpt-3.5-turbo",
+        #     messages=[
+        #         {"role": "system", "content": "You are a helpful C++ documentation assistant."},
+        #         {"role": "user", "content": prompt}
+        #     ],
+        #     temperature=0.5
+        # )
 
         # Extract the AI's response text
-        ai_response = response.choices[0].message.content
+        ai_response = mock_documentation
 
         # For debugging: print the AI response to our terminal
         print("AI Response Generated.")
