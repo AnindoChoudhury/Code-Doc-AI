@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
 @app.route('/')
 def index():
     return render_template('index.html')
